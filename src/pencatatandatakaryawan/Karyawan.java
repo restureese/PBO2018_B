@@ -26,7 +26,8 @@ public class Karyawan extends javax.swing.JFrame {
         setResizable(false);
     }
     
-    protected void setData(String nik, String nama, String jenis_kelamin, String jabatan, String alamat){
+    protected void setData(String nik, String nama, 
+            String jenis_kelamin, String jabatan, String alamat){
         txtNIK.setText(nik);
         txtNama.setText(nama);
         if(jenis_kelamin.equals("L")){
@@ -90,8 +91,18 @@ public class Karyawan extends javax.swing.JFrame {
         });
 
         btnUbah.setText("Ubah");
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
 
         btnHapus.setText("Hapus");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         rbJenisKelamin.add(rbLakiLaki);
         rbLakiLaki.setText("Laki - Laki");
@@ -195,6 +206,43 @@ public class Karyawan extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        try {
+            Connection connect = new Koneksi().getKoneksi();
+
+            String sql = "UPDATE `karyawan` SET `nama`=?,`jenis_kelamin`=?,`jabatan`=?,`alamat`=? WHERE nik=?;";
+            PreparedStatement statement = connect.prepareStatement(sql);
+            statement.setString(1, txtNama.getText());
+            String jenis_kelamin = rbLakiLaki.isSelected() ? "L":"P";
+            statement.setString(2, jenis_kelamin);
+            statement.setString(3, cbJabatan.getSelectedItem().toString());
+            statement.setString(4, txtAlamat.getText());
+            statement.setString(5, txtNIK.getText());
+            statement.execute();
+            JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+            this.dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_btnUbahActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        try {
+            Connection connect = new Koneksi().getKoneksi();
+
+            String sql = "DELETE FROM `karyawan` WHERE nik=?;";
+            PreparedStatement statement = connect.prepareStatement(sql);
+            statement.setString(1, txtNIK.getText());
+            statement.execute();
+            JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+            this.dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     /**
      * @param args the command line arguments
